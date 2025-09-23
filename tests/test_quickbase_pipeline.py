@@ -1,4 +1,3 @@
-# tests/test_quickbase_pipeline.py
 import json
 import responses
 import quickbase_pipeline as qp
