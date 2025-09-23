@@ -1,0 +1,35 @@
+name: Quickbase Automation Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Lint code
+      run: flake8 .
+
+    - name: Run Unit Tests
+      run: pytest --maxfail=1 --disable-warnings -q
+
+    - name: Deploy Script (dry-run if no secret)
+      env:
+        QB_USER_TOKEN: ${{ secrets.QB_USER_TOKEN }}
+        QB_REALM_HOST: ${{ secrets.QB_REALM_HOST }}
+        QB_TABLE_ID: ${{ secrets.QB_TABLE_ID }}
+      run: python quickbase_pipeline.py
