@@ -25,7 +25,9 @@ jobs:
       run: flake8 .
 
     - name: Run Unit Tests
-      run: pytest --maxfail=1 --disable-warnings -q
+      run: |
+        PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q
+
 
     - name: Deploy Script (dry-run if no secret)
       env:
